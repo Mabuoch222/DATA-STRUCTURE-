@@ -1,0 +1,118 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    int* arr;        // Array to store queue elements
+    int front;       // Index of the front element
+    int rear;        // Index of the rear element
+    int capacity;    // Maximum capacity of the queue
+    int size;        // Current size of the queue
+
+public:
+    // Constructor to initialize the queue
+    Queue(int capacity) {
+        this->capacity = capacity;
+        arr = new int[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    // Destructor to free memory
+    ~Queue() {
+        delete[] arr;
+    }
+
+    // Check if the queue is empty
+    bool isEmpty() {
+        return size == 0;
+    }
+
+    // Check if the queue is full
+    bool isFull() {
+        return size == capacity;
+    }
+
+    // Add an element to the queue (enqueue operation)
+    void enqueue(int value) {
+        if (isFull()) {
+            cout << "Queue overflow! Cannot enqueue " << value << ".\n";
+            return;
+        }
+        rear = (rear + 1) % capacity; // Circular increment
+        arr[rear] = value;
+        size++;
+        cout << "Enqueued " << value << ".\n";
+    }
+
+    // Remove an element from the queue (dequeue operation)
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue underflow! Cannot dequeue.\n";
+            return;
+        }
+        cout << "Dequeued " << arr[front] << ".\n";
+        front = (front + 1) % capacity; // Circular increment
+        size--;
+    }
+
+    // Get the front element of the queue
+    int getFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty! No front element.\n";
+            return -1;
+        }
+        return arr[front];
+    }
+
+    // Get the rear element of the queue
+    int getRear() {
+        if (isEmpty()) {
+            cout << "Queue is empty! No rear element.\n";
+            return -1;
+        }
+        return arr[rear];
+    }
+
+    // Display the elements in the queue
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty.\n";
+            return;
+        }
+        cout << "Queue elements: ";
+        for (int i = 0; i < size; i++) {
+            cout << arr[(front + i) % capacity] << " ";
+        }
+        cout << endl;
+    }
+};
+
+// Main function to demonstrate Queue ADT
+int main() {
+    int capacity = 5;
+    Queue queue(capacity);
+
+    // Enqueue elements
+    queue.enqueue(10);
+    queue.enqueue(20);
+    queue.enqueue(30);
+    queue.enqueue(40);
+    queue.display();
+
+    // Dequeue elements
+    queue.dequeue();
+    queue.display();
+
+    // Enqueue more elements
+    queue.enqueue(50);
+    queue.enqueue(60); // This will cause overflow if capacity is exceeded
+    queue.display();
+
+    // Get front and rear elements
+    cout << "Front element: " << queue.getFront() << endl;
+    cout << "Rear element: " << queue.getRear() << endl;
+
+    return 0;
+}
