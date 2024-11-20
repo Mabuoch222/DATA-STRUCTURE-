@@ -1,0 +1,135 @@
+#include <iostream>
+using namespace std;
+
+// Node class representing a single node in the Circular Linked List
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int data) {
+        this->data = data;
+        this->next = nullptr;
+    }
+};
+
+// CircularLinkedList class
+class CircularLinkedList {
+private:
+    Node* tail; // Points to the last node in the circular list
+
+public:
+    CircularLinkedList() {
+        tail = nullptr;
+    }
+
+    // Insert an element into the list
+    void insert(int x) {
+        Node* newNode = new Node(x);
+        if (tail == nullptr) { // Empty list
+            tail = newNode;
+            tail->next = tail;
+        } else { // Insert at the end
+            newNode->next = tail->next;
+            tail->next = newNode;
+            tail = newNode;
+        }
+        cout << "Inserted " << x << " into the list.\n";
+    }
+
+    // Remove an element from the list
+    void remove(int x) {
+        if (tail == nullptr) { // Empty list
+            cout << "List is empty. Cannot remove " << x << ".\n";
+            return;
+        }
+
+        Node* current = tail->next; // Start from the head
+        Node* prev = tail;
+
+        do {
+            if (current->data == x) { // Element found
+                if (current == tail && current->next == tail) { // Single node case
+                    delete current;
+                    tail = nullptr;
+                } else {
+                    prev->next = current->next;
+                    if (current == tail) {
+                        tail = prev; // Update tail if we're removing the last node
+                    }
+                    delete current;
+                }
+                cout << "Removed " << x << " from the list.\n";
+                return;
+            }
+            prev = current;
+            current = current->next;
+        } while (current != tail->next);
+
+        cout << x << " not found in the list.\n";
+    }
+
+    // Search for an element in the list and return its pointer
+    Node* search(int x) {
+        if (tail == nullptr) {
+            cout << "List is empty. Cannot search for " << x << ".\n";
+            return nullptr;
+        }
+
+        Node* current = tail->next; // Start from the head
+        do {
+            if (current->data == x) {
+                cout << "Found " << x << " in the list.\n";
+                return current;
+            }
+            current = current->next;
+        } while (current != tail->next);
+
+        cout << x << " not found in the list.\n";
+        return nullptr;
+    }
+
+    // Display the list
+    void display() {
+        if (tail == nullptr) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        Node* current = tail->next; // Start from the head
+        cout << "List elements: ";
+        do {
+            cout << current->data << " ";
+            current = current->next;
+        } while (current != tail->next);
+        cout << endl;
+    }
+};
+
+// Main function to demonstrate Circular Linked List operations
+int main() {
+    CircularLinkedList cll;
+
+    // Insert elements
+    cll.insert(10);
+    cll.insert(20);
+    cll.insert(30);
+    cll.display();
+
+    // Search for an element
+    cll.search(20);
+    cll.search(40);
+
+    // Remove elements
+    cll.remove(20);
+    cll.display();
+
+    cll.remove(40);
+    cll.display();
+
+    cll.remove(10);
+    cll.remove(30);
+    cll.display();
+
+    return 0;
+}
