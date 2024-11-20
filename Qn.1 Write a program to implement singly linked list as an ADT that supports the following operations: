@@ -1,0 +1,165 @@
+#include <iostream>
+using namespace std;
+
+// Node class representing a single node in the singly linked list
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int data) {
+        this->data = data;
+        this->next = nullptr;
+    }
+};
+
+// SinglyLinkedList class
+class SinglyLinkedList {
+private:
+    Node* head;
+
+public:
+    SinglyLinkedList() {
+        head = nullptr;
+    }
+
+    // Insert an element at the beginning
+    void insertAtBeginning(int x) {
+        Node* newNode = new Node(x);
+        newNode->next = head;
+        head = newNode;
+        cout << "Inserted " << x << " at the beginning.\n";
+    }
+
+    // Insert an element at the ith position
+    void insertAtPosition(int x, int i) {
+        Node* newNode = new Node(x);
+        if (i == 0) { // Insert at the beginning
+            newNode->next = head;
+            head = newNode;
+            cout << "Inserted " << x << " at position " << i << ".\n";
+            return;
+        }
+
+        Node* current = head;
+        int count = 0;
+        while (current != nullptr && count < i - 1) {
+            current = current->next;
+            count++;
+        }
+
+        if (current == nullptr) {
+            cout << "Position " << i << " is out of bounds.\n";
+            delete newNode;
+            return;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+        cout << "Inserted " << x << " at position " << i << ".\n";
+    }
+
+    // Remove an element from the beginning
+    void removeFromBeginning() {
+        if (head == nullptr) {
+            cout << "List is empty. Cannot remove from the beginning.\n";
+            return;
+        }
+
+        Node* temp = head;
+        head = head->next;
+        cout << "Removed " << temp->data << " from the beginning.\n";
+        delete temp;
+    }
+
+    // Remove an element from the ith position
+    void removeFromPosition(int i) {
+        if (head == nullptr) {
+            cout << "List is empty. Cannot remove from position " << i << ".\n";
+            return;
+        }
+
+        if (i == 0) { // Remove from the beginning
+            removeFromBeginning();
+            return;
+        }
+
+        Node* current = head;
+        Node* prev = nullptr;
+        int count = 0;
+
+        while (current != nullptr && count < i) {
+            prev = current;
+            current = current->next;
+            count++;
+        }
+
+        if (current == nullptr) {
+            cout << "Position " << i << " is out of bounds.\n";
+            return;
+        }
+
+        prev->next = current->next;
+        cout << "Removed " << current->data << " from position " << i << ".\n";
+        delete current;
+    }
+
+    // Search for an element and return its pointer
+    Node* search(int x) {
+        Node* current = head;
+        while (current != nullptr) {
+            if (current->data == x) {
+                cout << "Found " << x << " in the list.\n";
+                return current;
+            }
+            current = current->next;
+        }
+        cout << x << " not found in the list.\n";
+        return nullptr;
+    }
+
+    // Display the list
+    void display() {
+        if (head == nullptr) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        Node* current = head;
+        cout << "List elements: ";
+        while (current != nullptr) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
+    }
+};
+
+// Main function to demonstrate Singly Linked List operations
+int main() {
+    SinglyLinkedList sll;
+
+    // Insert elements at the beginning
+    sll.insertAtBeginning(10);
+    sll.insertAtBeginning(20);
+    sll.display();
+
+    // Insert elements at specific positions
+    sll.insertAtPosition(30, 1);
+    sll.insertAtPosition(40, 0);
+    sll.display();
+
+    // Remove elements from the beginning
+    sll.removeFromBeginning();
+    sll.display();
+
+    // Remove elements from specific positions
+    sll.removeFromPosition(1);
+    sll.display();
+
+    // Search for elements
+    sll.search(30);
+    sll.search(50);
+
+    return 0;
+}
