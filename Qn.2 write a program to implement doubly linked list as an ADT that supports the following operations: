@@ -1,0 +1,132 @@
+#include <iostream>
+using namespace std;
+
+// Node class representing a single node in the doubly linked list
+class Node {
+public:
+    int data;
+    Node* prev;
+    Node* next;
+
+    Node(int data) {
+        this->data = data;
+        this->prev = nullptr;
+        this->next = nullptr;
+    }
+};
+
+// DoublyLinkedList class
+class DoublyLinkedList {
+private:
+    Node* head;
+    Node* tail;
+
+public:
+    DoublyLinkedList() {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    // Insert an element at the beginning
+    void insertAtBeginning(int x) {
+        Node* newNode = new Node(x);
+        if (head == nullptr) { // If list is empty
+            head = tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        cout << "Inserted " << x << " at the beginning.\n";
+    }
+
+    // Insert an element at the end
+    void insertAtEnd(int x) {
+        Node* newNode = new Node(x);
+        if (tail == nullptr) { // If list is empty
+            head = tail = newNode;
+        } else {
+            newNode->prev = tail;
+            tail->next = newNode;
+            tail = newNode;
+        }
+        cout << "Inserted " << x << " at the end.\n";
+    }
+
+    // Remove an element from the beginning
+    void removeFromBeginning() {
+        if (head == nullptr) { // If list is empty
+            cout << "List is empty. Cannot remove from the beginning.\n";
+            return;
+        }
+
+        Node* temp = head;
+        if (head == tail) { // Single element in the list
+            head = tail = nullptr;
+        } else {
+            head = head->next;
+            head->prev = nullptr;
+        }
+        cout << "Removed " << temp->data << " from the beginning.\n";
+        delete temp;
+    }
+
+    // Remove an element from the end
+    void removeFromEnd() {
+        if (tail == nullptr) { // If list is empty
+            cout << "List is empty. Cannot remove from the end.\n";
+            return;
+        }
+
+        Node* temp = tail;
+        if (head == tail) { // Single element in the list
+            head = tail = nullptr;
+        } else {
+            tail = tail->prev;
+            tail->next = nullptr;
+        }
+        cout << "Removed " << temp->data << " from the end.\n";
+        delete temp;
+    }
+
+    // Display the elements in the list
+    void display() {
+        if (head == nullptr) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        Node* current = head;
+        cout << "List elements: ";
+        while (current != nullptr) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
+    }
+};
+
+// Main function to demonstrate Doubly Linked List operations
+int main() {
+    DoublyLinkedList dll;
+
+    // Insert elements at the beginning
+    dll.insertAtBeginning(10);
+    dll.insertAtBeginning(20);
+    dll.display();
+
+    // Insert elements at the end
+    dll.insertAtEnd(30);
+    dll.insertAtEnd(40);
+    dll.display();
+
+    // Remove elements from the beginning
+    dll.removeFromBeginning();
+    dll.display();
+
+    // Remove elements from the end
+    dll.removeFromEnd();
+    dll.display();
+
+    return 0;
+}
