@@ -1,0 +1,136 @@
+#include <iostream>
+using namespace std;
+
+// Node class representing a single node in the singly linked list
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int value) {
+        data = value;
+        next = nullptr;
+    }
+};
+
+// Singly Linked List class
+class SinglyLinkedList {
+private:
+    Node* head;
+
+public:
+    SinglyLinkedList() {
+        head = nullptr;
+    }
+
+    // Insert an element at the beginning
+    void insertAtBeginning(int value) {
+        Node* newNode = new Node(value);
+        newNode->next = head;
+        head = newNode;
+        cout << "Inserted " << value << " at the beginning.\n";
+    }
+
+    // Insert an element at the end
+    void insertAtEnd(int value) {
+        Node* newNode = new Node(value);
+        if (head == nullptr) { // List is empty
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+        cout << "Inserted " << value << " at the end.\n";
+    }
+
+    // Remove an element from the beginning
+    void removeFromBeginning() {
+        if (head == nullptr) {
+            cout << "List is empty. Cannot remove.\n";
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        cout << "Removed " << temp->data << " from the beginning.\n";
+        delete temp;
+    }
+
+    // Remove an element from the end
+    void removeFromEnd() {
+        if (head == nullptr) {
+            cout << "List is empty. Cannot remove.\n";
+            return;
+        }
+        if (head->next == nullptr) { // Single node in the list
+            delete head;
+            head = nullptr;
+            cout << "Removed the only element in the list.\n";
+            return;
+        }
+        Node* current = head;
+        Node* prev = nullptr;
+        while (current->next != nullptr) {
+            prev = current;
+            current = current->next;
+        }
+        prev->next = nullptr;
+        cout << "Removed " << current->data << " from the end.\n";
+        delete current;
+    }
+
+    // Search for an element in the list and return its pointer
+    Node* search(int value) {
+        Node* current = head;
+        while (current != nullptr) {
+            if (current->data == value) {
+                cout << "Found " << value << " in the list.\n";
+                return current;
+            }
+            current = current->next;
+        }
+        cout << value << " not found in the list.\n";
+        return nullptr;
+    }
+
+    // Display the elements of the list
+    void display() {
+        if (head == nullptr) {
+            cout << "List is empty.\n";
+            return;
+        }
+        Node* current = head;
+        cout << "List elements: ";
+        while (current != nullptr) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
+    }
+};
+
+// Main function to demonstrate Singly Linked List operations
+int main() {
+    SinglyLinkedList sll;
+
+    // Insertion
+    sll.insertAtBeginning(10);
+    sll.insertAtBeginning(20);
+    sll.insertAtEnd(30);
+    sll.display();
+
+    // Removal
+    sll.removeFromBeginning();
+    sll.display();
+
+    sll.removeFromEnd();
+    sll.display();
+
+    // Search
+    sll.search(10);
+    sll.search(50);
+
+    return 0;
+}
