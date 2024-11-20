@@ -1,0 +1,171 @@
+#include <iostream>
+using namespace std;
+
+// Node class representing a single node in the BST
+class Node {
+public:
+    int key;
+    Node* left;
+    Node* right;
+
+    Node(int key) {
+        this->key = key;
+        left = right = nullptr;
+    }
+};
+
+// BST class representing the Binary Search Tree
+class BinarySearchTree {
+private:
+    Node* root;
+
+    Node* insert(Node* root, int key) {
+        if (root == nullptr) {
+            return new Node(key);
+        }
+        if (key < root->key) {
+            root->left = insert(root->left, key);
+        } else if (key > root->key) {
+            root->right = insert(root->right, key);
+        }
+        return root;
+    }
+
+    Node* search(Node* root, int key) {
+        if (root == nullptr || root->key == key) {
+            return root;
+        }
+        if (key < root->key) {
+            return search(root->left, key);
+        }
+        return search(root->right, key);
+    }
+
+    Node* deleteNode(Node* root, int key) {
+        if (root == nullptr) {
+            return root;
+        }
+
+        if (key < root->key) {
+            root->left = deleteNode(root->left, key);
+        } else if (key > root->key) {
+            root->right = deleteNode(root->right, key);
+        } else {
+            // Node with one child or no child
+            if (root->left == nullptr) {
+                Node* temp = root->right;
+                delete root;
+                return temp;
+            } else if (root->right == nullptr) {
+                Node* temp = root->left;
+                delete root;
+                return temp;
+            }
+
+            // Node with two children: Get the inorder successor
+            Node* temp = minValueNode(root->right);
+            root->key = temp->key;
+            root->right = deleteNode(root->right, temp->key);
+        }
+        return root;
+    }
+
+    Node* minValueNode(Node* node) {
+        Node* current = node;
+        while (current && current->left != nullptr) {
+            current = current->left;
+        }
+        return current;
+    }
+
+    void inorder(Node* root) {
+        if (root != nullptr) {
+            inorder(root->left);
+            cout << root->key << " ";
+            inorder(root->right);
+        }
+    }
+
+    void preorder(Node* root) {
+        if (root != nullptr) {
+            cout << root->key << " ";
+            preorder(root->left);
+            preorder(root->right);
+        }
+    }
+
+    void postorder(Node* root) {
+        if (root != nullptr) {
+            postorder(root->left);
+            postorder(root->right);
+            cout << root->key << " ";
+        }
+    }
+
+public:
+    BinarySearchTree() {
+        root = nullptr;
+    }
+
+    void insert(int key) {
+        root = insert(root, key);
+    }
+
+    void deleteNode(int key) {
+        root = deleteNode(root, key);
+    }
+
+    bool search(int key) {
+        return search(root, key) != nullptr;
+    }
+
+    void inorder() {
+        inorder(root);
+        cout << endl;
+    }
+
+    void preorder() {
+        preorder(root);
+        cout << endl;
+    }
+
+    void postorder() {
+        postorder(root);
+        cout << endl;
+    }
+};
+
+// Main function to demonstrate the BST operations
+int main() {
+    BinarySearchTree bst;
+
+    // Insert elements
+    bst.insert(50);
+    bst.insert(30);
+    bst.insert(70);
+    bst.insert(20);
+    bst.insert(40);
+    bst.insert(60);
+    bst.insert(80);
+
+    // Display traversals
+    cout << "Inorder Traversal: ";
+    bst.inorder();
+
+    cout << "Preorder Traversal: ";
+    bst.preorder();
+
+    cout << "Postorder Traversal: ";
+    bst.postorder();
+
+    // Search for an element
+    int key = 40;
+    cout << "Search for " << key << ": " << (bst.search(key) ? "Found" : "Not Found") << endl;
+
+    // Delete an element
+    bst.deleteNode(50);
+    cout << "Inorder Traversal after deletion: ";
+    bst.inorder();
+
+    return 0;
+}
